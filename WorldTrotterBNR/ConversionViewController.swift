@@ -38,6 +38,34 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
         updateCelciusLabel()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        let dateString = formatter.string(from: now)
+        var hrsString = ""
+        for c in dateString {
+            if c == ":" {
+                break
+            }
+            hrsString += String(c)
+        }
+        var hrsInt: Int = Int(hrsString)!
+        let meridiem = dateString[dateString.index(dateString.endIndex, offsetBy: -2)]
+        switch meridiem {
+        case "P":
+            hrsInt += 12
+        default:
+            break
+        }
+        if hrsInt <= 6 || hrsInt >= 14 {
+            view.backgroundColor = UIColor.black
+        }
+    }
+    
     func updateCelciusLabel() {
         if let celciusValue = celciusValue {
             celsiusLabel.text = numberFormatter.string(from: NSNumber(value:celciusValue.value))

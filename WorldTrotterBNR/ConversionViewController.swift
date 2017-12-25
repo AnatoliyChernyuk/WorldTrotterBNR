@@ -42,6 +42,9 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
         
         let now = Date()
+        let hour = Calendar.current.component(.hour, from: now) // The best solution at the forum
+        
+        /* Mine solution neglecting the calendric calculations
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
@@ -61,10 +64,12 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
         default:
             break
         }
-        if hrsInt <= 6 || hrsInt >= 14 {
+         */
+        if hour < 6 || hour > 14 {
             view.backgroundColor = UIColor.black
         }
     }
+ 
     
     func updateCelciusLabel() {
         if let celciusValue = celciusValue {

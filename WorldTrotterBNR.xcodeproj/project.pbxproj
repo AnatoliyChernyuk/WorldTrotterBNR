@@ -16,6 +16,7 @@
 		60BBE49E1FEE92F200D59D89 /* ConversionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BBE49D1FEE92F200D59D89 /* ConversionViewController.swift */; };
 		60BBE4A11FEFD9CC00D59D89 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60BBE4A01FEFD9CC00D59D89 /* MapKit.framework */; };
 		60BBE4A31FEFE1FB00D59D89 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BBE4A21FEFE1FB00D59D89 /* MapViewController.swift */; };
+		60BBE4A71FF15D5600D59D89 /* BNRWebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BBE4A61FF15D5600D59D89 /* BNRWebViewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		60BBE49D1FEE92F200D59D89 /* ConversionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionViewController.swift; sourceTree = "<group>"; };
 		60BBE4A01FEFD9CC00D59D89 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		60BBE4A21FEFE1FB00D59D89 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		60BBE4A61FF15D5600D59D89 /* BNRWebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BNRWebViewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				60BBE46F1FEE68D900D59D89 /* AppDelegate.swift */,
+				60BBE4A61FF15D5600D59D89 /* BNRWebViewViewController.swift */,
 				60BBE49D1FEE92F200D59D89 /* ConversionViewController.swift */,
 				60BBE4A21FEFE1FB00D59D89 /* MapViewController.swift */,
 				60BBE4731FEE68D900D59D89 /* Main.storyboard */,
@@ -277,6 +280,7 @@
 				60BBE49E1FEE92F200D59D89 /* ConversionViewController.swift in Sources */,
 				60BBE4A31FEFE1FB00D59D89 /* MapViewController.swift in Sources */,
 				60BBE4701FEE68D900D59D89 /* AppDelegate.swift in Sources */,
+				60BBE4A71FF15D5600D59D89 /* BNRWebViewViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,6 +17,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     var location: CLLocation?
     var updatingLocation = false
     var lastLocationError: Error?
+    var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +26,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     override func loadView() {
         super.loadView()
         mapView = MKMapView()
+        mapView.showsUserLocation = false
         view = mapView
         
         let segmentedControl = UISegmentedControl(items: ["Standard", "Hybrid", "Satellite"])
@@ -69,6 +71,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             location = nil
             lastLocationError = nil
             startLocationManager()
+            showUserLocation()
         }
     }
     
@@ -78,6 +81,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
+            timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(didTimeOut), userInfo: nil, repeats: false)
         }
     }
     
@@ -86,7 +90,23 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             locationManager.stopUpdatingLocation()
             locationManager.delegate = nil
             updatingLocation = false
+            if let timer = timer {
+                timer.invalidate()
+            }
         }
+    }
+    
+    @objc func didTimeOut() {
+        if location == nil {
+            stopLocationManager()
+            showLocationErrorAlert()
+        }
+    }
+    
+    func showUserLocation() {
+        mapView.showsUserLocation = true
+        let region = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, 1000, 1000)
+        mapView.setRegion(mapView.regionThatFits(region), animated: true)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -122,7 +142,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             if newLocation.horizontalAccuracy <= locationManager.desiredAccuracy {
                 stopLocationManager()
             }
-        } else if distance < 1 {
+        } else if distance < 1 {// Using the distance and time interval to stop the locationManager
             let timeInterval = newLocation.timestamp.timeIntervalSince(location!.timestamp)
             if timeInterval > 10 {
                 stopLocationManager()

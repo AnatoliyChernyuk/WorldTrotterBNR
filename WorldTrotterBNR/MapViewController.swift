@@ -5,6 +5,7 @@
 //  Created by Anatoliy Chernyuk on 12/24/17.
 //  Copyright © 2017 Anatoliy Chernyuk. All rights reserved.
 //
+//*** Silver Challenge solved - show zoomed user location on the map when button pressed
 
 import UIKit
 import MapKit
@@ -104,13 +105,15 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func showUserLocation() {
-        mapView.showsUserLocation = true
-        let region = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, 1000, 1000)
-        mapView.setRegion(mapView.regionThatFits(region), animated: true)
+        //solution learned from iOS Apprentice
+        //mapView.showsUserLocation = true
+        //let region = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, 1000, 1000)
+        //mapView.setRegion(mapView.regionThatFits(region), animated: true)
+        mapView.userTrackingMode = .follow //The best solution! Got it from the forum
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location Manager didFailWithError \(error)")
+        //print("Location Manager didFailWithError \(error)")
         
         if (error as NSError).code == CLError.locationUnknown.rawValue {
             return
@@ -122,7 +125,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let newLocation = locations.last!
-        print("didUpdateLocations \(newLocation)")
+        //print("didUpdateLocations \(newLocation)")
         if newLocation.timestamp.timeIntervalSinceNow < -5 {
             return
         }

@@ -19,6 +19,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     var updatingLocation = false
     var lastLocationError: Error?
     var timer: Timer?
+    var pins: [MKAnnotation]?
     
     override func viewDidLoad() {
         super.viewDidLoad()

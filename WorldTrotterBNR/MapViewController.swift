@@ -20,6 +20,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     var lastLocationError: Error?
     var timer: Timer?
     var pins: [MKAnnotation]?
+    var pinItem = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,17 +46,35 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         leadingConstrain.isActive = true
         trailingConstrain.isActive = true
         
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.clear
-        let image = UIImage(named: "Pin.png")
-        button.setImage(image, for: .normal)
-        button.addTarget(self, action: #selector(getLocation), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(button)
-        let bottomButtonConstrain = button.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor, constant: -16)
-        bottomButtonConstrain.isActive = true
-        let trailingButtonConstrain = button.trailingAnchor.constraint(equalTo: magins.trailingAnchor)
-        trailingButtonConstrain.isActive = true
+        let locationButton = UIButton(type: .system)
+        locationButton.backgroundColor = UIColor.clear
+        let image = UIImage(named: "Tag.png")
+        locationButton.setImage(image, for: .normal)
+        locationButton.sizeToFit()
+        locationButton.addTarget(self, action: #selector(getLocation), for: .touchUpInside)
+        locationButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(locationButton)
+        let bottomLocationButtonConstrain = locationButton.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor, constant: -16)
+        bottomLocationButtonConstrain.isActive = true
+        let trailingLocationButtonConstrain = locationButton.trailingAnchor.constraint(equalTo: magins.trailingAnchor)
+        trailingLocationButtonConstrain.isActive = true
+        
+        let pinsButton = UIButton(type: .system)
+        pinsButton.backgroundColor = UIColor.clear
+        let pinsImage = UIImage(named: "Pin.png")
+        pinsButton.setImage(pinsImage, for: .normal)
+        pinsButton.sizeToFit()
+        pinsButton.addTarget(self, action: #selector(showPins), for: .touchUpInside)
+        pinsButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(pinsButton)
+        let bottomPinsButtonConstrain = pinsButton.bottomAnchor.constraint(equalTo: locationButton.topAnchor, constant: -16)
+        bottomPinsButtonConstrain.isActive = true
+        let trailingPinsButtonConstrain = pinsButton.trailingAnchor.constraint(equalTo: magins.trailingAnchor)
+        trailingPinsButtonConstrain.isActive = true
+        
+        
+        
+        
     }
     
     //MARK: - CLLocationManagerDelegate
@@ -74,6 +93,29 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             lastLocationError = nil
             startLocationManager()
             showUserLocation()
+        }
+    }
+    
+    @objc func showPins() {
+        if pins == nil {
+            pins = [MKAnnotation]()
+            
+            let location = mapView.userLocation.coordinate
+            mapView.showsUserLocation = false
+            let userPin = Pin(title: "You Are here", coordinate: location, subtitle: nil)
+            pins!.append(userPin)
+            let bacotaPin = Pin(title: "Bacota Bay", coordinate: CLLocationCoordinate2D(latitude: 48.585714, longitude: 26.998488), subtitle: "Love to come here")
+            pins!.append(bacotaPin)
+            let maliyivtsiPin = Pin(title: "Maliyivtsi", coordinate: CLLocationCoordinate2D(latitude: 48.991991, longitude: 26.996249), subtitle: "Nice place to visit")
+            pins!.append(maliyivtsiPin)
+            mapView.addAnnotation(pins![0])
+        } else {
+            if pinItem == 3 {
+                pinItem = 0
+            }
+            mapView.removeAnnotations(pins!)
+            mapView.addAnnotation(pins![pinItem])
+            pinItem += 1
         }
     }
     

@@ -51,7 +51,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         let image = UIImage(named: "Tag.png")
         locationButton.setImage(image, for: .normal)
         locationButton.sizeToFit()
-        locationButton.addTarget(self, action: #selector(getLocation), for: .touchUpInside)
+        locationButton.addTarget(self, action: #selector(showUserLocation), for: .touchUpInside)
         locationButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(locationButton)
         let bottomLocationButtonConstrain = locationButton.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor, constant: -16)
@@ -77,15 +77,19 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
-    //MARK: - CLLocationManagerDelegate
-    @objc func getLocation() {
+    //MARK: - MKMapViewDelegate
+    func requestStatus() -> Bool {
         let authStatus = CLLocationManager.authorizationStatus()
         if authStatus == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
+            return true
         }
         if authStatus == .denied || authStatus == .restricted {
             showLocationServicesDeniedAlert()
+            return true
         }
+        return false
+        /*
         if updatingLocation {
             stopLocationManager()
         } else {
@@ -93,32 +97,82 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             lastLocationError = nil
             startLocationManager()
             showUserLocation()
+        */
+    }
+    
+    @objc func showUserLocation() {
+        //solution learned from iOS Apprentice
+        //mapView.showsUserLocation = true
+        //let region = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, 1000, 1000)
+        //mapView.setRegion(mapView.regionThatFits(region), animated: true)
+        if requestStatus() {
+            return
         }
+        if let pins = pins {
+            mapView.removeAnnotations(pins)
+        }
+        mapView.userTrackingMode = .follow //The best solution! Got it from the forum
+        mapView.showsUserLocation = true
     }
     
     @objc func showPins() {
+        if requestStatus() {
+            return
+        }
         if pins == nil {
             pins = [MKAnnotation]()
-            
-            let location = mapView.userLocation.coordinate
             mapView.showsUserLocation = false
-            let userPin = Pin(title: "You Are here", coordinate: location, subtitle: nil)
-            pins!.append(userPin)
+            pins!.append(mapView.userLocation)
             let bacotaPin = Pin(title: "Bacota Bay", coordinate: CLLocationCoordinate2D(latitude: 48.585714, longitude: 26.998488), subtitle: "Love to come here")
             pins!.append(bacotaPin)
             let maliyivtsiPin = Pin(title: "Maliyivtsi", coordinate: CLLocationCoordinate2D(latitude: 48.991991, longitude: 26.996249), subtitle: "Nice place to visit")
             pins!.append(maliyivtsiPin)
-            mapView.addAnnotation(pins![0])
+            mapView.addAnnotation(pins![0] as MKAnnotation)
+            mapView.userTrackingMode = .follow
         } else {
+            mapView.showsUserLocation = false
             if pinItem == 3 {
                 pinItem = 0
             }
             mapView.removeAnnotations(pins!)
             mapView.addAnnotation(pins![pinItem])
+            let region = MKCoordinateRegionMakeWithDistance(pins![pinItem].coordinate, 1000, 1000)
+            mapView.setRegion(mapView.regionThatFits(region), animated: true)
             pinItem += 1
         }
     }
     
+    func showLocationServicesDeniedAlert() {
+        let alertController = UIAlertController(title: "Location Services Disabled", message: "Please enable location services for this app in Settings", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func showLocationErrorAlert() {
+        let alertController = UIAlertController(title: "Error Getting Location", message: "The system is not able to get current location. Please try again later", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    //MARK: - UISegmentedControl
+    @objc func mapTypeChanged(_ segControl: UISegmentedControl) {
+        switch segControl.selectedSegmentIndex {
+        case 0:
+            mapView.mapType = .standard
+        case 1:
+            mapView.mapType = .hybrid
+        case 2:
+            mapView.mapType = .satellite
+        default:
+            break
+        }
+    }
+    
+    /*
+    //MARK: - CLLocationManagerDelegate - not used in this example as MKMapViewDelegate API is enough
+     
     func startLocationManager() {
         if CLLocationManager.locationServicesEnabled() {
             updatingLocation = true
@@ -145,14 +199,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             stopLocationManager()
             showLocationErrorAlert()
         }
-    }
-    
-    func showUserLocation() {
-        //solution learned from iOS Apprentice
-        //mapView.showsUserLocation = true
-        //let region = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, 1000, 1000)
-        //mapView.setRegion(mapView.regionThatFits(region), animated: true)
-        mapView.userTrackingMode = .follow //The best solution! Got it from the forum
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -195,34 +241,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             }
         }
     }
-    
-    func showLocationServicesDeniedAlert() {
-        let alertController = UIAlertController(title: "Location Services Disabled", message: "Please enable location services for this app in Settings", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(okAction)
-        present(alertController, animated: true, completion: nil)
-    }
-    
-    func showLocationErrorAlert() {
-        let alertController = UIAlertController(title: "Error Getting Location", message: "The system is not able to get current location. Please try again later", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(okAction)
-        present(alertController, animated: true, completion: nil)
-    }
-    
-    //MARK: - UISegmentedControl
-    @objc func mapTypeChanged(_ segControl: UISegmentedControl) {
-        switch segControl.selectedSegmentIndex {
-        case 0:
-            mapView.mapType = .standard
-        case 1:
-            mapView.mapType = .hybrid
-        case 2:
-            mapView.mapType = .satellite
-        default:
-            break
-        }
-    }
+     
+    */
 }
 
 

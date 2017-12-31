@@ -15,12 +15,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     var mapView: MKMapView!
     
     let locationManager = CLLocationManager()
-    var location: CLLocation?
-    var updatingLocation = false
-    var lastLocationError: Error?
-    var timer: Timer?
     var pins: [MKAnnotation]?
     var pinItem = 1
+    
+    //var location: CLLocation?
+    //var updatingLocation = false
+    //var lastLocationError: Error?
+    //var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +33,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         mapView.showsUserLocation = false
         view = mapView
         
-        let segmentedControl = UISegmentedControl(items: ["Standard", "Hybrid", "Satellite"])
+        let standardString = NSLocalizedString("Standard", comment: "Standard map view")
+        let hybridString = NSLocalizedString("Hybrid", comment: "Hybrid map view")
+        let satelliteString = NSLocalizedString("Satellite", comment: "Satellite map view")
+        let segmentedControl = UISegmentedControl(items: [standardString, hybridString, satelliteString])
         segmentedControl.backgroundColor = UIColor.white.withAlphaComponent(0.5)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.addTarget(self, action: #selector(mapTypeChanged(_:)), for: .valueChanged)
@@ -71,10 +75,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         bottomPinsButtonConstrain.isActive = true
         let trailingPinsButtonConstrain = pinsButton.trailingAnchor.constraint(equalTo: magins.trailingAnchor)
         trailingPinsButtonConstrain.isActive = true
-        
-        
-        
-        
     }
     
     //MARK: - MKMapViewDelegate
@@ -123,9 +123,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             pins = [MKAnnotation]()
             mapView.showsUserLocation = false
             pins!.append(mapView.userLocation)
-            let bacotaPin = Pin(title: "Bacota Bay", coordinate: CLLocationCoordinate2D(latitude: 48.585714, longitude: 26.998488), subtitle: "Love to come here")
+            let bacotaPinTitle = NSLocalizedString("Bacota Bay", comment: "Bacota Bay pin title")
+            let bacotaPinSubtitle = NSLocalizedString("Love to come here", comment: "Bacota Bay pin subtitle")
+            let bacotaPin = Pin(title: bacotaPinTitle, coordinate: CLLocationCoordinate2D(latitude: 48.585714, longitude: 26.998488), subtitle: bacotaPinSubtitle)
             pins!.append(bacotaPin)
-            let maliyivtsiPin = Pin(title: "Maliyivtsi", coordinate: CLLocationCoordinate2D(latitude: 48.991991, longitude: 26.996249), subtitle: "Nice place to visit")
+            let maliyivtsiPinTitle = NSLocalizedString("Maliyivtsi", comment: "Maliyivtsi pin title")
+            let maliyivtsiPinSubtitle = NSLocalizedString("Nice place to visit", comment: "Maliyivtsi pin subtitile")
+            let maliyivtsiPin = Pin(title: maliyivtsiPinTitle, coordinate: CLLocationCoordinate2D(latitude: 48.991991, longitude: 26.996249), subtitle: maliyivtsiPinSubtitle)
             pins!.append(maliyivtsiPin)
             mapView.addAnnotation(pins![0] as MKAnnotation)
             mapView.userTrackingMode = .follow
@@ -143,15 +147,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     func showLocationServicesDeniedAlert() {
-        let alertController = UIAlertController(title: "Location Services Disabled", message: "Please enable location services for this app in Settings", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alertController.addAction(okAction)
-        present(alertController, animated: true, completion: nil)
-    }
-    
-    func showLocationErrorAlert() {
-        let alertController = UIAlertController(title: "Error Getting Location", message: "The system is not able to get current location. Please try again later", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let locationServicesDeniedAlertControllerTitle = NSLocalizedString("Location Services Disabled", comment: "Location Services Denied Alert Controller Title")
+        let locationServicesDeniedAlertControllerMessage = NSLocalizedString("Please enable location services for this app in Settings", comment: "Location Services Denied Alert Controller Message")
+        let okActionTitle = NSLocalizedString("OK", comment: "OK action title")
+        let alertController = UIAlertController(title: locationServicesDeniedAlertControllerTitle, message: locationServicesDeniedAlertControllerMessage, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: okActionTitle, style: .default, handler: nil)
         alertController.addAction(okAction)
         present(alertController, animated: true, completion: nil)
     }
@@ -241,6 +241,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             }
         }
     }
+     
+     func showLocationErrorAlert() {
+     let alertController = UIAlertController(title: "Error Getting Location", message: "The system is not able to get current location. Please try again later", preferredStyle: .alert)
+     let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+     alertController.addAction(okAction)
+     present(alertController, animated: true, completion: nil)
+     }
      
     */
 }

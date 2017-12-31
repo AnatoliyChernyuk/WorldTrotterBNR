@@ -1,0 +1,24 @@
+
+/* Class = "UITabBarItem"; title = "Map"; ObjectID = "GGS-Hz-o3g"; */
+"GGS-Hz-o3g.title" = "Мапа";
+
+/* Class = "UILabel"; text = "degrees Celsius"; ObjectID = "SRf-lu-Mim"; */
+"SRf-lu-Mim.text" = "градусів по Цельсію";
+
+/* Class = "UITextField"; placeholder = "value"; ObjectID = "geK-ta-fGe"; */
+"geK-ta-fGe.placeholder" = "величина";
+
+/* Class = "UILabel"; text = "is really"; ObjectID = "qOp-kM-T5S"; */
+"qOp-kM-T5S.text" = "дорівнює";
+
+/* Class = "UILabel"; text = "100"; ObjectID = "sX3-eR-my1"; */
+"sX3-eR-my1.text" = "100";
+
+/* Class = "UILabel"; text = "degrees Farenheit"; ObjectID = "u7h-m4-sf7"; */
+"u7h-m4-sf7.text" = "градусів по Фаренгейту";
+
+/* Class = "UITabBarItem"; title = "Convert"; ObjectID = "wNC-D2-Jar"; */
+"wNC-D2-Jar.title" = "Перевести";
+
+/* Class = "UITabBarItem"; title = "BigNerdRanch.com"; ObjectID = "wif-3f-Z6O"; */
+"wif-3f-Z6O.title" = "BigNerdRanch.com";
